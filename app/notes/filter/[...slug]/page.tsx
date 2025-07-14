@@ -2,9 +2,25 @@
 import NotesClient from './Notes.client';
 import { getNotes } from '@/lib/api';
 
+
 type Props = {
   params: Promise<{ slug: string[] }>
-  };
+};
+  
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params
+  const category = slug[0] 
+  const notes = await getNotes({
+    search: "",
+    tag: category,
+    page: 1,
+  }
+   )
+  return {
+    title: notes.notes,
+    description: notes.totalPages,
+  }
+}
 
 const NotesPageWithFilters = async ({ params }: Props) => {
   const { slug } = await params;

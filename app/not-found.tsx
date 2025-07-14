@@ -1,5 +1,23 @@
 import Link from "next/link";
 import css from "./not-found.module.css";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: 'Not found',
+    description: 'Oops.. this page does not exist',
+    openGraph:{
+    title: 'Not found',
+    description: 'Oops.. this page does not exist',
+    url: '',
+    images: [
+    { url: '/app/not-found.png',
+    width: '1200',
+    height:'630',
+    alt: 'Error image'
+        }
+    ]
+    }
+}
 
 const NotFound = () => {
     return (

@@ -4,28 +4,27 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { Metadata } from "next";
 
 
-type Props = {
+type NoteDetailsProps = {
   params: Promise<{ id: string }>
 };
 
-export async function generateMetadata({ params }: Props):Promise <Metadata> { 
+export async function generateMetadata({ params }: NoteDetailsProps):Promise <Metadata> { 
   const { id } = await params;
-const noteId = Number(id);
-
-  const note = await fetchNoteById(noteId);
+  const parsedId = Number(id);
+  const note = await fetchNoteById(parsedId);
   return {
-    title: `Note: ${note.title}`,
+    title: note.title,
     description: note.content,
      openGraph: {
         title: `Note: ${note.title}`,
-        description: note.content,
-        url: `https://notehub-public.goit.study/api/${noteId}`, 
+        description: `${note.content.slice(0, 30)}...`,
+        url: `https://notehub.com/notes/${id}`, 
         images: [
           {
             url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
             width: 1200,
             height: 630,
-            alt: 'Note preview image',
+            alt: `${note.title} | NoteHub`,
           },
         ],
       },
@@ -33,7 +32,7 @@ const noteId = Number(id);
     
 }
 
-const NoteDetails = async ({ params }: Props) => {
+const NoteDetails = async ({ params }: NoteDetailsProps) => {
   const resolvedParams = await params;
   const queryClient = new QueryClient();
   const noteId = Number(resolvedParams.id);

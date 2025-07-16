@@ -1,29 +1,41 @@
 "use client";
-import { useRouter } from 'next/navigation';
-
+import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "../../lib/api";
 import { useState } from "react";
 import css from "./NoteForm.module.css";
-
+import { useStore, Draft } from "../../lib/store/noteStore";
 
 export default function NoteForm() {
+  const draft = useStore((state) => state.draft);
+  const setDraft = useStore((state) => state.setDraft);
+  const clearDraft = useStore((state) => state.clearDraft);
+  const [title, setTitle] = useState(draft.title);
+  const [content, setContent] = useState(draft.content);
+  const [tag, setTag] = useState(draft.tag);
+
+  const updateDraft = (newFields: Partial<Draft>) => {
+    setDraft({
+      title,
+      content,
+      tag,
+      ...newFields,
+    });
+  };
+
   const queryClient = useQueryClient();
   const [mutationError, setMutationError] = useState<string | null>(null);
   const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tag, setTag] = useState<
-    "Todo" | "Work" | "Personal" | "Meeting" | "Shopping"
-    >("Todo");
+
   const [wasTitleTouched, setWasTitleTouched] = useState(false);
 
   const { mutate, isPending } = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
+      clearDraft();
       queryClient.invalidateQueries({ queryKey: ["notes"] });
       setMutationError(null);
-      router.push('/notes/filter/All')
+      router.push("/notes/filter/All");
     },
     onError: (error) => {
       console.error("Note creation failed:", error);
@@ -51,14 +63,16 @@ export default function NoteForm() {
           maxLength={50}
           className={css.input}
           value={title}
-          onChange={(e) =>{
-            setTitle(e.target.value)
+          onChange={(e) => {
+            setTitle(e.target.value);
+            updateDraft({ title: e.target.value });
             setWasTitleTouched(true);
-          }
-          }
+          }}
           required
         />
-        {wasTitleTouched && title.length < 3 && <span className={css.error}>Title too short</span>}
+        {wasTitleTouched && title.length < 3 && (
+          <span className={css.error}>Title too short</span>
+        )}
       </div>
 
       <div className={css.formGroup}>
@@ -69,7 +83,10 @@ export default function NoteForm() {
           rows={8}
           value={content}
           className={css.textarea}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => {
+            setContent(e.target.value);
+            updateDraft({ content: e.target.value });
+          }}
         />
       </div>
 
@@ -80,7 +97,11 @@ export default function NoteForm() {
           id="tag"
           className={css.select}
           value={tag}
-          onChange={(e) => setTag(e.target.value as typeof tag)}
+          onChange={(e) => {
+            const newTag = e.target.value as typeof tag;
+            setTag(newTag);
+            updateDraft({ tag: newTag });
+          }}
           required
         >
           <option value="Todo">Todo</option>
@@ -92,7 +113,11 @@ export default function NoteForm() {
       </div>
 
       <div className={css.actions}>
-        <button type="button" onClick={() => router.push('/notes/filter/All')} className={css.cancelButton}>
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className={css.cancelButton}
+        >
           Cancel
         </button>
         <button type="submit" className={css.submitButton} disabled={isPending}>

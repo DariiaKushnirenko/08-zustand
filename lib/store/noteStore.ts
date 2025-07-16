@@ -1,25 +1,29 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
-const initialDraft = {
+export const initialDraft = {
     title: '',
     content: '',
     tag:'Tag' as 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping',
 };
 
-type Draft = typeof initialDraft;
+export type Draft = typeof initialDraft;
+
 
 type Store = {
     draft: Draft;
     setDraft: (note: Draft) => void;
     clearDraft: () => void;
 }
-const useStore = create<Store>((set) => ({
-  draft: initialDraft,
-
-  setDraft: (note) => set({ draft: note }),
-
-  clearDraft: () => set({ draft: initialDraft }),
-}));
-
-
-export default useStore;
+export const useStore = create<Store>()(
+  persist(
+    (set) => ({
+      draft: initialDraft,
+      setDraft: (note) => set({ draft: note }),
+      clearDraft: () => set({ draft: initialDraft }),
+    }),
+    {
+      name: 'note-draft', // localStorage key
+    }
+  )
+)

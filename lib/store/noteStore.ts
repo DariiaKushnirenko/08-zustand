@@ -9,7 +9,6 @@ export const initialDraft = {
 
 export type Draft = typeof initialDraft;
 
-
 type Store = {
     draft: Draft;
     setDraft: (note: Draft) => void;

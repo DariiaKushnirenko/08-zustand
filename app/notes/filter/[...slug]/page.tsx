@@ -1,5 +1,5 @@
 
-import NotesClient from './NotesClient';
+import NotesClient from './Notes.client';
 import { getNotes } from '@/lib/api';
 import { Metadata } from "next";
 import { Tag } from '@/types/note';

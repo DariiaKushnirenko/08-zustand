@@ -2,9 +2,9 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 export const initialDraft = {
-    title: '',
-    content: '',
-    tag:'Tag' as 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping',
+  title: '',
+  content: '',
+  tag: 'Todo' as 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping',
 };
 
 export type Draft = typeof initialDraft;

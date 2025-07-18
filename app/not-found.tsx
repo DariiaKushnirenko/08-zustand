@@ -8,11 +8,11 @@ export const metadata: Metadata = {
     openGraph:{
     title: 'Not found',
     description: 'Oops.. this page does not exist',
-    url: '',
+    url: 'https://08-zustand-sigma.vercel.app/not-found',
     images: [
     { url: '/app/not-found.png',
-    width: '1200',
-    height:'630',
+    width: 1200,
+    height: 630,
     alt: 'Error image'
         }
     ]

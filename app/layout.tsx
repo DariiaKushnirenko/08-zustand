@@ -7,11 +7,11 @@ import { Roboto } from "next/font/google";
 
 export const metadata: Metadata = {
   title: "Note Hub",
-  description: "your personal notepad",
+  description: "Your personal notepad",
   openGraph: {
     title: "Note Hub",
     description: "Your personal notepad",
-    url: "",
+    url: "https://08-zustand-sigma.vercel.app/",
     images: [
       {
         url: "https://ac.goit.global/fullstack/react/notehub-og-meta.jpg",
